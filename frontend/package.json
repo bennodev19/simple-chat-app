@@ -6,7 +6,7 @@
   "syncDir": "dist",
   "scripts": {
     "build": "lerna run build",
-    "prettier": "prettier --config .prettierrc --write \"**/*.{js,ts}\"",
+    "prettier": "prettier --config .prettierrc --write \"**/*.{js,ts,jsx,tsx}\"",
     "lint": "eslint --cache \"**/*.{js,jsx,ts,tsx}\"",
     "start:web": "cd packages/web && yarn run start"
   },
