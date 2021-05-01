@@ -1,21 +1,29 @@
 import React from 'react';
-import { chats } from '../../db';
 import moment from 'moment';
 import { List, ListItem } from '@material-ui/core';
 import styled from 'styled-components';
+import { useState, useMemo } from 'react';
 
-const ChatsList: React.FC = () => {
+const ChatsList = () => {
+  const [chats, setChats] = useState<any[]>([]);
+
+  useMemo(async () => {
+    console.log(process.env.REACT_APP_SERVER_URL);
+    const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/chats`);
+    const chats = await body.json();
+    setChats(chats);
+  }, []);
+
   return (
     <Container>
       <StyledList>
         {chats.map((chat) => (
-          <StyledListItem key={chat.id} button>
+          <StyledListItem key={chat!.id} button>
             <ChatPicture src={chat.picture} alt="Profile" />
             <ChatInfo>
               <ChatName>{chat.name}</ChatName>
               {chat.lastMessage && (
                 <React.Fragment>
-                  {/* https://reactjs.org/docs/fragments.html */}
                   <MessageContent>{chat.lastMessage.content}</MessageContent>
                   <MessageDate>
                     {moment(chat.lastMessage.createdAt).format('HH:mm')}
