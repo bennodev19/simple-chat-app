@@ -29,6 +29,7 @@
     "CHANGELOG.md"
   ],
   "dependencies": {
-    "@agile-ts/core": "^0.0.14"
+    "@agile-ts/core": "^0.0.14",
+    "socket.io-client": "^4.0.1"
   }
 }
