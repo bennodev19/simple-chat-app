@@ -9,7 +9,7 @@
     "prettier": "prettier --config .prettierrc --write \"**/*.{js,ts,jsx,tsx,css,graphql}\"",
     "lint": "eslint --cache \"**/*.{js,jsx,ts,tsx,css,graphql}\"",
     "bootstrap": "lerna bootstrap",
-    "watch": "lerna run watch --stream",
+    "watch": "lerna run watch",
     "link:packages": "yarn run bootstrap && yarn run watch"
   },
   "devDependencies": {
