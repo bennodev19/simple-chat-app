@@ -2,19 +2,20 @@
   "private": true,
   "author": "BennoDev",
   "license": "MIT",
-  "description": "Fontend",
+  "description": "Frontend",
   "syncDir": "dist",
   "scripts": {
     "build": "lerna run build",
-    "prettier": "prettier --config .prettierrc --write \"**/*.{js,ts,jsx,tsx}\"",
-    "lint": "eslint --cache \"**/*.{js,jsx,ts,tsx}\"",
-    "start:web": "cd packages/web && yarn run start"
+    "prettier": "prettier --config .prettierrc --write \"**/*.{js,ts,jsx,tsx,css,graphql}\"",
+    "lint": "eslint --cache \"**/*.{js,jsx,ts,tsx,css,graphql}\"",
+    "bootstrap": "lerna bootstrap",
+    "watch": "lerna run watch --stream",
+    "link:packages": "yarn run bootstrap && yarn run watch"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
-    "coveralls": "^3.1.0",
     "eslint": "^7.17.0",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^6.11.0",
@@ -23,7 +24,6 @@
     "lerna": "^3.22.1",
     "nodemon": "^2.0.6",
     "prettier": "2.1.2",
-    "ts-jest": "^26.4.4",
     "ts-node": "^8.10.2",
     "tsc-watch": "^4.1.0",
     "tslib": "^2.0.0",

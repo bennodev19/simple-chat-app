@@ -1,11 +1,16 @@
 {
   "extends": "../tsconfig.default.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "resolveJsonModule": true
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "resolveJsonModule": true,
+    "noEmit": true
   },
   "include": [
-    "./src/**/*" // Only include what is in src (-> dist, tests, .. will be excluded)
+    "./src/**/*"
   ]
 }
