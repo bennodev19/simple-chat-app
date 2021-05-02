@@ -1,18 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeContext, ThemeProvider } from 'styled-components';
-
-import themes from '@chatapp/theme';
 import App from './App';
+import themes from '@chatapp/theme';
+import { ThemeWrapper } from './components/ThemeWrapper';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
-    <ThemeContext.Provider value={themes.light}>
-      <ThemeProvider theme={themes.light}>
-        <App />
-      </ThemeProvider>
-    </ThemeContext.Provider>,
+    <ThemeWrapper theme={themes.light}>
+      <App />
+    </ThemeWrapper>,
     div
   );
   ReactDOM.unmountComponentAtNode(div);

@@ -1,4 +1,5 @@
 import React from 'react';
+import '@testing-library/jest-dom/extend-expect'; // https://github.com/testing-library/react-testing-library/issues/379
 import {
   cleanup,
   render,
@@ -7,10 +8,10 @@ import {
   screen,
 } from '@testing-library/react';
 import fetchMock from 'jest-fetch-mock';
-import '@testing-library/jest-dom/extend-expect'; // https://github.com/testing-library/react-testing-library/issues/379
-
 import { BrowserHistory, createBrowserHistory } from 'history';
 import ChatsList from './ChatsList';
+import { ThemeWrapper } from '../ThemeWrapper';
+import themes from '@chatapp/theme';
 
 describe('ChatsList', () => {
   let history: BrowserHistory;
@@ -18,14 +19,10 @@ describe('ChatsList', () => {
   beforeEach(() => {
     fetchMock.doMock();
     history = createBrowserHistory();
-
-    history.push = jest.fn();
   });
 
-  afterEach(() => {
-    // unmount and cleanup DOM after the test is finished.
-    cleanup();
-  });
+  // unmount and cleanup DOM after the test is finished
+  afterEach(cleanup);
 
   it('renders fetched chats data', async () => {
     // Mock fetch API
@@ -52,7 +49,9 @@ describe('ChatsList', () => {
       // Render ChatList, and get specific jest methods like getByTestId() with which you can get DOM Elements by the defined data-testid
       // https://testing-library.com/docs/angular-testing-library/api/#render
       const { container, getByTestId } = render(
-        <ChatsList history={history} />
+        <ThemeWrapper theme={themes.light}>
+          <ChatsList history={history} />
+        </ThemeWrapper>
       );
 
       // https://testing-library.com/docs/dom-testing-library/api-async/#waitfor
@@ -90,14 +89,18 @@ describe('ChatsList', () => {
 
     {
       const { container, getByTestId } = render(
-        <ChatsList history={history} />
+        <ThemeWrapper theme={themes.light}>
+          <ChatsList history={history} />
+        </ThemeWrapper>
       );
 
       await waitFor(() => screen.getByTestId('chat'));
 
       fireEvent.click(getByTestId('chat'));
 
-      expect(history.push).toHaveBeenCalledWith('chats/1');
+      await waitFor(() =>
+        expect(history.location.pathname).toEqual('/chats/1')
+      );
     }
   });
 });
