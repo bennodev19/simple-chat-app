@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import { ThemeContext, ThemeProvider } from 'styled-components';
+
 import themes from '@chatapp/theme';
+import App from './App';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
