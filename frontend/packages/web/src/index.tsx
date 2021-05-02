@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { ThemeContext, ThemeProvider } from 'styled-components';
 import themes from '@chatapp/theme';
 import App from './App';
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>

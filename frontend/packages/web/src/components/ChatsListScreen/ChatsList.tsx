@@ -1,9 +1,8 @@
-import React from 'react';
-import moment from 'moment';
-import { List, ListItem } from '@material-ui/core';
+import React, { useCallback, useState, useMemo } from 'react';
 import styled from 'styled-components';
-import { useCallback, useState, useMemo } from 'react';
+import moment from 'moment';
 import { History } from 'history';
+import { List, ListItem } from '@material-ui/core';
 
 const getChatsQuery = `
   query GetChats {

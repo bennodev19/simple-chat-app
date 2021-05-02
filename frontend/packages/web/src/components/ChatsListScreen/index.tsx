@@ -1,8 +1,8 @@
 import React from 'react';
-import ChatsList from './ChatsList';
-import ChatsNavbar from './ChatsNavbar';
 import styled from 'styled-components';
 import { History } from 'history';
+import ChatsList from './ChatsList';
+import ChatsNavbar from './ChatsNavbar';
 
 interface ChatsListScreenProps {
   history: History;

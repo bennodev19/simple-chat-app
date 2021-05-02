@@ -1,6 +1,6 @@
 import React from 'react';
-import { Toolbar } from '@material-ui/core';
 import styled from 'styled-components';
+import { Toolbar } from '@material-ui/core';
 
 const ChatsNavbar: React.FC = () => {
   return <Container>Whatsapp Clone</Container>;

@@ -21,8 +21,14 @@ const App: React.FC = () => {
           exact
           path="/chats/:chatId"
           // https://reactrouter.com/core/api/match
-          component={({ match }: RouteComponentProps<{ chatId: string }>) => (
-            <ChatRoomScreen chatId={match.params.chatId} />
+          component={({
+            match,
+            history,
+          }: RouteComponentProps<{ chatId: string }>) => (
+            <ChatRoomScreen
+              chatId={match.params.chatId}
+              history={history as any}
+            />
           )}
         />
       </AnimatedSwitch>
