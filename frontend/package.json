@@ -11,7 +11,8 @@
     "bootstrap": "lerna bootstrap",
     "watch": "lerna run watch",
     "link:packages": "yarn run bootstrap && yarn run watch",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@types/node": "^14.14.7",
@@ -24,6 +25,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "jest": "26.6.0",
+    "jest-mock-console": "^1.0.1",
     "jest-fetch-mock": "3.0.3",
     "ts-jest": "26.5.5",
     "lerna": "^3.22.1",
