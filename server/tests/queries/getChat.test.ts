@@ -2,19 +2,17 @@ import { createTestClient } from 'apollo-server-testing';
 import { ApolloServer, gql } from 'apollo-server-express';
 import schema from '../../schema';
 
-describe('Query.chats', () => {
-  it('should fetch all chats', async () => {
+describe('Query.chat', () => {
+  it('should fetch specified chat', async () => {
     const server = new ApolloServer({ schema });
 
-    // Create Apollo Server Test Client
     const { query } = createTestClient(server);
 
-    // Create test Query 'sent' from the Test Client
     const res = await query({
-      // the 'gql' only says the id to syntax highlight the query correct
+      variables: { chatId: '1' },
       query: gql`
-        query GetChats {
-          chats {
+        query GetChat($chatId: ID!) {
+          chat(chatId: $chatId) {
             id
             name
             picture
@@ -28,11 +26,8 @@ describe('Query.chats', () => {
       `,
     });
 
-    // Validate resolved query data
     expect(res.data).toBeDefined();
     expect(res.errors).toBeUndefined();
-    // Calls .toString() method on the examined object (res.data)
-    // and checks if it matches the Snapshot defined in '__snapshots__/getChats.test.ts.snap'
     expect(res.data).toMatchSnapshot();
   });
 });

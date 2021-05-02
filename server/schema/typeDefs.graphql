@@ -1,6 +1,7 @@
-scalar Date
+scalar Date # https://graphql.org/learn/schema/#scalar-types
 scalar URL
 
+# https://graphql.org/learn/schema/#type-system
 type Message {
   id: ID!
   content: String!
@@ -8,12 +9,16 @@ type Message {
 }
 
 type Chat {
-  id: ID!
+  id: ID! # excelmation mark means that the element can be null
   name: String!
   picture: URL
   lastMessage: Message
+  messages: [Message!]!
 }
 
+# Special type which defined the entry point of the GraphQL query
+# https://graphql.org/learn/schema/#the-query-and-mutation-types
 type Query {
-  chats: [Chat!]! # outer exclemation mark mean that if you run this query it will alwyas return an array of zero or more items (-> never null)
+  chats: [Chat!]! # the outer exclemation mark means that if you run this query it will alwyas return an array of zero or more items (-> never null)
+  chat(chatId: ID!): Chat
 }

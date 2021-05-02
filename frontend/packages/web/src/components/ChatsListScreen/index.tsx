@@ -2,12 +2,19 @@ import React from 'react';
 import ChatsList from './ChatsList';
 import ChatsNavbar from './ChatsNavbar';
 import styled from 'styled-components';
+import { History } from 'history';
 
-const ChatsListScreen: React.FC = () => {
+interface ChatsListScreenProps {
+  history: History;
+}
+
+const ChatsListScreen: React.FC<ChatsListScreenProps> = (props) => {
+  const { history } = props;
+
   return (
     <Container>
       <ChatsNavbar />
-      <ChatsList />
+      <ChatsList history={history} />
     </Container>
   );
 };

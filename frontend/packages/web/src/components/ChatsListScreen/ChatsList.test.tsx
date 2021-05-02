@@ -9,28 +9,22 @@ import {
 import fetchMock from 'jest-fetch-mock';
 import '@testing-library/jest-dom/extend-expect'; // https://github.com/testing-library/react-testing-library/issues/379
 
-import { createBrowserHistory } from 'history';
+import { BrowserHistory, createBrowserHistory } from 'history';
 import ChatsList from './ChatsList';
 
 describe('ChatsList', () => {
+  let history: BrowserHistory;
+
   beforeEach(() => {
     fetchMock.doMock();
+    history = createBrowserHistory();
+
+    history.push = jest.fn();
   });
 
   afterEach(() => {
     // unmount and cleanup DOM after the test is finished.
     cleanup();
-
-    // reset nav
-    // @ts-ignore
-    delete window.location;
-    window = Object.create(window);
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: '/',
-      },
-      writable: true,
-    });
   });
 
   it('renders fetched chats data', async () => {
@@ -53,8 +47,6 @@ describe('ChatsList', () => {
         },
       })
     );
-
-    const history = createBrowserHistory();
 
     {
       // Render ChatList, and get specific jest methods like getByTestId() with which you can get DOM Elements by the defined data-testid
@@ -96,8 +88,6 @@ describe('ChatsList', () => {
       })
     );
 
-    const history = createBrowserHistory();
-
     {
       const { container, getByTestId } = render(
         <ChatsList history={history} />
@@ -107,9 +97,7 @@ describe('ChatsList', () => {
 
       fireEvent.click(getByTestId('chat'));
 
-      await waitFor(() =>
-        expect(history.location.pathname).toEqual('/chats/1')
-      );
+      expect(history.push).toHaveBeenCalledWith('chats/1');
     }
   });
 });
