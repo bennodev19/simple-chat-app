@@ -1,10 +1,12 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { History } from 'history';
 import { List, ListItem } from '@material-ui/core';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
-const getChatsQuery = `
+export const getChatsQuery = gql`
   query GetChats {
     chats {
       id
@@ -25,7 +27,10 @@ interface ChatsListProps {
 
 const ChatsList: React.FC<ChatsListProps> = (props) => {
   const { history } = props;
-  const [chats, setChats] = useState<any[]>([]);
+
+  // Fetch Chats from Apollo Client
+  const { data } = useQuery<any>(getChatsQuery);
+  let chats = data?.chats;
 
   // Navigation
   const navToChat = useCallback(
@@ -35,19 +40,10 @@ const ChatsList: React.FC<ChatsListProps> = (props) => {
     [history]
   );
 
-  useMemo(async () => {
-    const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: getChatsQuery }),
-    });
-    const {
-      data: { chats },
-    } = await body.json();
-    setChats(chats);
-  }, []);
+  // Check if Chats exists
+  if (chats == null) {
+    return null;
+  }
 
   return (
     <Container>

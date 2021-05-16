@@ -1,12 +1,15 @@
+import gql from 'graphql-tag';
 import React, { useCallback } from 'react';
-import { useMemo, useState } from 'react';
+import { useApolloClient, useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import ChatNavbar from './ChatNavbar';
 import MessageInput from './MessageInput';
 import MessagesList from './MessagesList';
 import { History } from 'history';
 
-const getChatQuery = `
+// gql is from 'graphql-tag' that parses the GraphQL string to an AST,
+// something which is required when using Apollo Client
+const getChatQuery = gql`
   query GetChat($chatId: ID!) {
     chat(chatId: $chatId) {
       id
@@ -43,24 +46,15 @@ type OptionalChatQueryResult = ChatQueryResult | null;
 
 const ChatRoomScreen: React.FC<ChatRoomScreenParams> = (props) => {
   const { chatId, history } = props;
-  const [chat, setChat] = useState<OptionalChatQueryResult>(null);
 
-  useMemo(async () => {
-    const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: getChatQuery,
-        variables: { chatId },
-      }),
-    });
-    const {
-      data: { chat },
-    } = await body.json();
-    setChat(chat);
-  }, [chatId]);
+  // Get Apollo Client from Context Api (wrapped in index.tsx)
+  const client = useApolloClient();
+
+  // Fetch Chats from Apollo Client
+  const { data } = useQuery<any>(getChatQuery, {
+    variables: { chatId },
+  });
+  const chat: OptionalChatQueryResult = data?.chat ?? null;
 
   const onSendMessage = useCallback(
     (content: string) => {
@@ -70,14 +64,22 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = (props) => {
         id: (chat.messages.length + 10).toString(),
         createdAt: new Date(),
         content,
+        __typename: 'Chat', // That's how Apollo Client knows where to place the cached results. (https://www.apollographql.com/docs/react/caching/cache-configuration/#default-identifier-generation)
       };
 
-      setChat({
-        ...chat,
-        messages: chat.messages.concat(message),
+      // Write Chat Query with the apollo 'wrapper'
+      client.writeQuery({
+        query: getChatQuery,
+        variables: { chatId },
+        data: {
+          chat: {
+            ...chat,
+            messages: chat.messages.concat(message),
+          },
+        },
       });
     },
-    [chat]
+    [chat, chatId, client]
   );
 
   if (!chat) return null;

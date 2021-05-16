@@ -1,5 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect'; // https://github.com/testing-library/react-testing-library/issues/379
+import { ApolloProvider } from '@apollo/react-hooks';
 import {
   cleanup,
   render,
@@ -9,9 +10,10 @@ import {
 } from '@testing-library/react';
 import fetchMock from 'jest-fetch-mock';
 import { BrowserHistory, createBrowserHistory } from 'history';
-import ChatsList from './ChatsList';
 import { ThemeWrapper } from '../ThemeWrapper';
 import themes from '@chatapp/theme';
+import { mockApolloClient } from '../../test-helpers';
+import ChatsList, { getChatsQuery } from './ChatsList';
 
 describe('ChatsList', () => {
   let history: BrowserHistory;
@@ -25,32 +27,39 @@ describe('ChatsList', () => {
   afterEach(cleanup);
 
   it('renders fetched chats data', async () => {
-    // Mock fetch API
-    fetchMock.mockResponseOnce(
-      JSON.stringify({
-        data: {
-          chats: [
-            {
-              id: 1,
-              name: 'Foo Bar',
-              picture: 'https://localhost:4000/picture.jpg',
-              lastMessage: {
+    // Create mock Apollo Client
+    const client = mockApolloClient([
+      {
+        request: { query: getChatsQuery },
+        result: {
+          data: {
+            chats: [
+              {
+                __typename: 'Chat',
                 id: 1,
-                content: 'Hello',
-                createdAt: new Date('1 Jan 2019 GMT'),
+                name: 'Foo Bar',
+                picture: 'https://localhost:4000/picture.jpg',
+                lastMessage: {
+                  __typename: 'Message',
+                  id: 1,
+                  content: 'Hello',
+                  createdAt: new Date('1 Jan 2019 GMT'),
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      })
-    );
+      },
+    ]);
 
     {
       // Render ChatList, and get specific jest methods like getByTestId() with which you can get DOM Elements by the defined data-testid
       // https://testing-library.com/docs/angular-testing-library/api/#render
       const { container, getByTestId } = render(
         <ThemeWrapper theme={themes.light}>
-          <ChatsList history={history} />
+          <ApolloProvider client={client}>
+            <ChatsList history={history} />
+          </ApolloProvider>
         </ThemeWrapper>
       );
 
@@ -68,29 +77,36 @@ describe('ChatsList', () => {
   });
 
   it('should navigate to the target chat room on chat item click', async () => {
-    fetchMock.mockResponseOnce(
-      JSON.stringify({
-        data: {
-          chats: [
-            {
-              id: 1,
-              name: 'Foo Bar',
-              picture: 'https://localhost:4000/picture.jpg',
-              lastMessage: {
+    const client = mockApolloClient([
+      {
+        request: { query: getChatsQuery },
+        result: {
+          data: {
+            chats: [
+              {
+                __typename: 'Chat',
                 id: 1,
-                content: 'Hello',
-                createdAt: new Date('1 Jan 2019 GMT'),
+                name: 'Foo Bar',
+                picture: 'https://localhost:4000/picture.jpg',
+                lastMessage: {
+                  __typename: 'Message',
+                  id: 1,
+                  content: 'Hello',
+                  createdAt: new Date('1 Jan 2019 GMT'),
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      })
-    );
+      },
+    ]);
 
     {
       const { container, getByTestId } = render(
         <ThemeWrapper theme={themes.light}>
-          <ChatsList history={history} />
+          <ApolloProvider client={client}>
+            <ChatsList history={history} />
+          </ApolloProvider>
         </ThemeWrapper>
       );
 
